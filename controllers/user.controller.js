@@ -64,4 +64,26 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUser, signup, signin, deleteUser };
+const editUser = async (req, res) => {
+  try {
+    const { name, username, email } = req.body;
+    const { id } = req.params;
+
+    if (!name || !username || !email)
+      return res.status(422).json({ message: "Fill all the data and try again !..." });
+
+    await userModel.findOneAndUpdate(
+      { _id: id },
+      {
+        name,
+        username,
+        email,
+      }
+    );
+    return res.status(200).json({ message: "User Edit Successfully!" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getUser, signup, signin, editUser, deleteUser };
